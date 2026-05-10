@@ -32,7 +32,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>User Lists</h1>
+      <h1>User List</h1>
 
       {users.map((user) => (
         <p key={user.id}>{user.name}</p>
