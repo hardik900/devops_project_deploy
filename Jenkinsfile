@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment{
         DOCKERHUB_USERNAME = 'hardik795'
-        FRONTEND_IMAGE = 'hardik795/frotend'
+        FRONTEND_IMAGE = 'hardik795/frontend'
         BACKEND_IMAGE = 'hardik795/backend'
     } 
     stages{
@@ -17,16 +17,18 @@ pipeline {
         stage('Build Frontend Image'){
             steps{
                 echo 'Building Frontend Docker image'
-                dir('frontend')
-                sh 'docker build -t $FRONTEND_IMAGE:latest .'
+                dir('frontend'){
+                    sh 'docker build -t $FRONTEND_IMAGE:latest .'
+                }
             }
         }
 
         stage('Build Backend Image'){
             steps{
                 echo 'Building Backend Docker image'
-                dir('Backend')
-                sh 'docker build -t $BACKEND_IMAGE:latest .'
+                dir('Backend'){
+                    sh 'docker build -t $BACKEND_IMAGE:latest .'
+                }
             }
         }
 
