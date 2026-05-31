@@ -75,33 +75,29 @@ pipeline {
             steps {
                 echo 'Deploying application to EC2'
 
-                sshagent(credentials: ['ec2-ssh-key']) {
-
+                sshagent(['ec2-user']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no \
-                        $EC2_USER@$EC2_HOST << EOF
+                    ssh -o StrictHostKeyChecking=no ec2-user@54.90.53.57 << 'EOF'
 
-                        cd /home/ec2-user/app
+                    echo "Stopping containers"
+                    docker compose -f /home/ec2-user/docker-compose.yml down
 
-                        echo "Stopping containers"
-                        docker compose down || true
+                    echo "Pulling latest images"
+                    docker compose -f /home/ec2-user/docker-compose.yml pull
 
-                        echo "Pulling latest images"
-                        docker compose pull
+                    echo "Starting containers"
+                    docker compose -f /home/ec2-user/docker-compose.yml up -d
 
-                        echo "Starting containers"
-                        docker compose up -d
+                    echo "Cleaning old images"
+                    docker image prune -af
 
-                        echo "Cleaning old images"
-                        docker image prune -af
+                    docker ps
 
-                        docker ps
-
-                        EOF
+                    EOF
                     '''
                 }
-            }
         }
+}
     }
 
     post {
