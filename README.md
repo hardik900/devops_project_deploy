@@ -422,3 +422,462 @@ docker logs jenkins
 ---
 
 *Built with Docker + Jenkins + AWS EC2*
+
+# 🚀 Full Stack React + Node.js CI/CD Deployment Project
+
+A production-style full-stack application deployed using **Docker, Jenkins, DockerHub, and AWS EC2** with automated CI/CD pipeline.
+
+This project demonstrates how to build, containerize, push, and deploy a **React frontend** and **Node.js backend** automatically using **Jenkins Pipeline**.
+
+---
+
+# 📌 Project Overview
+
+This project contains:
+
+* **Frontend** → React.js application
+* **Backend** → Node.js API
+* **Containerization** → Docker
+* **CI/CD** → Jenkins Pipeline
+* **Container Registry** → DockerHub
+* **Deployment Server** → AWS EC2
+* **Deployment Strategy** → Automated SSH-based deployment using Jenkins
+
+---
+
+# 🏗️ Architecture
+
+```text
+GitHub Repository
+        │
+        ▼
+     Jenkins
+        │
+        ├── Build Frontend Docker Image
+        ├── Build Backend Docker Image
+        ├── Push Images to DockerHub
+        │
+        ▼
+     DockerHub
+        │
+        ▼
+      AWS EC2
+        │
+        ├── Pull Latest Images
+        ├── Stop Old Containers
+        └── Run Updated Containers
+```
+
+---
+
+# 🛠️ Tech Stack
+
+### Frontend
+
+* React.js
+* Vite
+* Nginx
+
+### Backend
+
+* Node.js
+* Express.js
+
+### DevOps & Deployment
+
+* Docker
+* Docker Compose
+* Jenkins
+* DockerHub
+* AWS EC2
+* SSH Authentication
+
+---
+
+# 📂 Project Structure
+
+```text
+project-root/
+│
+├── frontend/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── src/
+│
+├── Backend/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── server.js
+│
+├── Jenkinsfile
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+# ⚙️ CI/CD Pipeline Flow
+
+The Jenkins pipeline performs the following steps automatically:
+
+### 1. Clone Repository
+
+Jenkins pulls the latest code from GitHub.
+
+### 2. Build Docker Images
+
+Build frontend image:
+
+```bash
+docker build -t your-dockerhub/frontend:latest .
+```
+
+Build backend image:
+
+```bash
+docker build -t your-dockerhub/backend:latest .
+```
+
+### 3. Push Images to DockerHub
+
+```bash
+docker push your-dockerhub/frontend:latest
+docker push your-dockerhub/backend:latest
+```
+
+### 4. Deploy to AWS EC2
+
+Jenkins connects to EC2 using SSH and performs:
+
+```bash
+docker compose down
+docker compose pull
+docker compose up -d
+docker image prune -f
+```
+
+---
+
+# 🐳 Docker Setup
+
+## Build Frontend
+
+```bash
+cd frontend
+
+docker build -t frontend .
+```
+
+Run container:
+
+```bash
+docker run -p 3001:3000 frontend
+```
+
+---
+
+## Build Backend
+
+```bash
+cd Backend
+
+docker build -t backend .
+```
+
+Run container:
+
+```bash
+docker run -p 5000:5000 backend
+```
+
+---
+
+# ☁️ AWS EC2 Deployment
+
+## Connect to EC2
+
+```bash
+ssh -i key.pem ec2-user@your-ec2-ip
+```
+
+## Pull Latest Containers
+
+```bash
+docker compose pull
+```
+
+## Start Containers
+
+```bash
+docker compose up -d
+```
+
+## Check Running Containers
+
+```bash
+docker ps
+```
+
+---
+
+# 🔐 Jenkins Credentials Required
+
+You need the following Jenkins credentials:
+
+### DockerHub Credentials
+
+* Username
+* Password/Access Token
+
+### SSH Private Key
+
+Used to connect Jenkins → AWS EC2.
+
+Credential type:
+
+```text
+SSH Username with private key
+```
+
+Username:
+
+```text
+ec2-user
+```
+
+---
+
+# 🔥 Common Issues & Fixes
+
+## 1. Old Website Still Showing
+
+### Problem
+
+After deployment, browser still shows old frontend.
+
+### Fix
+
+Clear browser cache:
+
+```text
+Ctrl + Shift + R
+```
+
+OR open:
+
+```text
+Incognito Mode
+```
+
+Rebuild image without cache:
+
+```bash
+docker build --no-cache -t frontend .
+```
+
+Pull latest image:
+
+```bash
+docker compose pull
+```
+
+Restart containers:
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+---
+
+## 2. Docker Latest Image Not Updating
+
+### Problem
+
+Container runs old image.
+
+### Fix
+
+Remove old images:
+
+```bash
+docker image prune -a
+```
+
+Pull latest image:
+
+```bash
+docker pull your-dockerhub/frontend:latest
+```
+
+---
+
+## 3. Jenkins SSH Error
+
+Error:
+
+```text
+Could not find specified credentials
+```
+
+### Fix
+
+Go to:
+
+```text
+Jenkins → Manage Credentials
+```
+
+Add:
+
+```text
+SSH Username with Private Key
+```
+
+Use same credential ID inside Jenkinsfile.
+
+---
+
+## 4. EOF Command Not Found
+
+Error:
+
+```text
+EOF: command not found
+```
+
+### Cause
+
+Incorrect EOF indentation in Jenkinsfile.
+
+### Fix
+
+Correct syntax:
+
+```bash
+ssh ec2-user@server << EOF
+docker compose down
+docker compose pull
+docker compose up -d
+EOF
+```
+
+Make sure EOF alignment is correct.
+
+---
+
+## 5. Port Already in Use
+
+Check running containers:
+
+```bash
+docker ps
+```
+
+Kill container:
+
+```bash
+docker stop container_id
+docker rm container_id
+```
+
+---
+
+## 6. Docker Compose Warning
+
+Warning:
+
+```text
+version is obsolete
+```
+
+### Fix
+
+Remove:
+
+```yaml
+version: '3'
+```
+
+from `docker-compose.yml`.
+
+---
+
+# 🚀 Production Best Practices
+
+### ❌ Avoid using `latest`
+
+Instead use version tags:
+
+```text
+frontend:v1
+frontend:v2
+```
+
+### Use Environment Variables
+
+Store secrets in:
+
+```text
+.env
+```
+
+### Keep Frontend & Backend Separate
+
+Run different services using Docker Compose.
+
+### Monitor Logs
+
+Frontend logs:
+
+```bash
+docker logs frontend
+```
+
+Backend logs:
+
+```bash
+docker logs backend
+```
+
+---
+
+# 📋 Useful Commands
+
+### Running Containers
+
+```bash
+docker ps
+```
+
+### Stop Containers
+
+```bash
+docker compose down
+```
+
+### Restart Containers
+
+```bash
+docker compose restart
+```
+
+### Remove Unused Images
+
+```bash
+docker image prune -a
+```
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+Fork the repository and create a pull request.
+
+---
+
+# 📜 License
+
+This project is for learning and DevOps practice purposes.
