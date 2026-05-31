@@ -93,7 +93,7 @@ pipeline {
 
                     docker ps
 
-                    EOF
+EOF
                     '''
                 }
         }
