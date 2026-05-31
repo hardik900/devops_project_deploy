@@ -81,7 +81,7 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no \
                         $EC2_USER@$EC2_HOST << EOF
 
-                        cd /home/ubuntu/app
+                        cd /home/ec2-user/app
 
                         echo "Stopping containers"
                         docker compose down || true
