@@ -35,7 +35,7 @@ pipeline {
             steps {
                 echo 'Building backend docker image'
 
-                dir('backend') {
+                dir('Backend') {
                     sh '''
                         docker build \
                         -t $BACKEND_IMAGE:latest .
