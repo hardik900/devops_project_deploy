@@ -75,7 +75,7 @@ pipeline {
             steps {
                 echo 'Deploying application to EC2'
 
-                sshagent(['ec2-user']) {
+                sshagent(['ec2-ssh-key']) {
                     sh '''
                     ssh -o StrictHostKeyChecking=no ec2-user@54.90.53.57 << 'EOF'
 
