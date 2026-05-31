@@ -4,7 +4,8 @@ import axios from "axios";
 
 // Base URL
 const API = axios.create({
-    baseURL: "http://localhost:5000",
+    // baseURL: "http://localhost:5000",
+    baseURL: "http://54.90.53.57:5000",
 });
 
 // GET API
